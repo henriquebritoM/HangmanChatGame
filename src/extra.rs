@@ -1,11 +1,6 @@
 
 pub fn words() -> [[&'static str; 2]; 150] {
 
-
-
-
-
-
     let _words = [
     ["mesa", "Superfície plana e geralmente retangular, apoiada por pernas, usada para colocar objetos ou realizar refeições."],
     ["cadeira", "Assento comum com encosto, utilizado por uma pessoa para descansar ou se sentar confortavelmente."],
