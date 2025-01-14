@@ -28,8 +28,10 @@ impl Point {
     }
 }
 
-pub fn draw_char(character: char, point: &Point, array1: &mut [[char; 40]; 200]) {
-    array1[point.x][point.y] = character;
+pub fn draw_char(character: char, point: &Point, array1: &mut [[char; CANVA.yu]; CANVA.xu]) {
+    if point.get_x() < CANVA.xu && point.get_y() < CANVA.yu {
+        array1[point.x][point.y] = character;
+    }
 }
 
 // This is the main printing function, it cleans the terminal and then prints every element

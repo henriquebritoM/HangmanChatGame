@@ -65,7 +65,7 @@ pub fn draw_vertical_line (start: i32, end: i32, xpos: i32, array1: &mut [[char;
 
     for _el in valid_start..valid_end {
         draw_char(character, &point, array1);
-        point.set_x(point.get_x() + 1);
+        point.set_y(point.get_y() + 1);
     }
 }
 
