@@ -1,4 +1,4 @@
-use crate::{draw_utils::{core::{print_line, print_terminal}, draw_ascii, draw_horizontal_line, draw_vertical_line, text_chars, text_draw, text_with_line_breaker}, extra, get_input, get_random_num, str_to_char, GameState, CANVA};
+use crate::{draw_utils::{core::{print_line, print_terminal}, draw_ascii, draw_horizontal_line, draw_vertical_line, text_chars, text_draw, text_with_line_breaker}, extra::{self, Word, WORDS}, get_input, str_to_char, GameState, CANVA};
 
 pub fn handle_menu(array1: &mut [[char; CANVA.yu]; CANVA.xu], state: &mut GameState) {
 
@@ -41,8 +41,8 @@ pub fn handle_turorial(array1: &mut [[char; CANVA.yu]; CANVA.xu], state: &mut Ga
 pub fn handle_playing(array1: &mut [[char; CANVA.yu]; CANVA.xu], state: &mut GameState, points: &mut [i32; 1]) {
 
     let mut input: char;
-    let word: [&str; 2] = extra::words()[get_random_num()];
-    let word_chars: Vec<char> = str_to_char(&word[0]);
+    let word: Word = extra::get_word();
+    let word_chars: Vec<char> = str_to_char(word.get_name());
     let mut word_hidden: Vec<char> = Vec::new();
     let mut used_chars: [char; 26] = ['_'; 26];
     let alphabet: [char; 26] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
@@ -58,8 +58,9 @@ pub fn handle_playing(array1: &mut [[char; CANVA.yu]; CANVA.xu], state: &mut Gam
     
     draw_horizontal_line(2, 20, 22, array1, '=');
     draw_vertical_line(11, 22, 19, array1, '|');
-    text_with_line_breaker(CANVA.xu - CANVA.xu / 4 * 3 - 4, 16, CANVA.x / 4 * 3 + 2, array1, word[1]); // This is the hint 
-    (start, end, [height1, height2]) = playing_draw_word(array1, [word[0]], &word_hidden);
+    // prints the 'hint'
+    text_with_line_breaker(CANVA.xu - CANVA.xu / 4 * 3 - 4, 16, CANVA.x / 4 * 3 + 2, array1, word.get_description());
+    (start, end, [height1, height2]) = playing_draw_word(array1, [word.get_name()], &word_hidden);
 
     print_terminal(array1); // IMPORTANT: do not call this fn in any specific draw fn, it won't bug the program but it will cause double printing, wich is ugly 
 
@@ -113,7 +114,7 @@ pub fn handle_playing(array1: &mut [[char; CANVA.yu]; CANVA.xu], state: &mut Gam
             draw_horizontal_line(start, end + 2, num, array1,' ');
         }
 
-        playing_draw_word(array1, [word[0]], &word_hidden);
+        playing_draw_word(array1, [word.get_name()], &word_hidden);
         
         print_terminal(array1);
 
@@ -255,12 +256,13 @@ fn menu_draw(array1: &mut [[char; CANVA.yu]; CANVA.xu]) {
     draw_ascii(&three, 4, 50, 28,"left", array1);
     text_draw (13, 50, 30, "left", array1, "Para sair do jogo a qualquer momento");
 
-    let mut t: usize = 0;
-    for n in &extra::words() {
-        t += n[0].len() + n[1].len();
+    let mut total_characters: usize = 0;
+    for n in WORDS {
+        total_characters += n[0].len() + n[1].len();
     }
 
-    text_with_line_breaker(33, 15, CANVA.x - 35, array1, &format!("Sabia que existem atualmente {} palavras no jogo?! Isso corresponde a exatamentes {} caracteres sendo usados, impressionante, não é mesmo?", &extra::words().len().to_string(), t));
+    text_with_line_breaker(33, 15, CANVA.x - 35, array1, &format!("Sabia que existem atualmente {} palavras no jogo?! Isso corresponde a exatamentes \
+                                                                                                    {} caracteres sendo usados, impressionante, não é mesmo?", WORDS.len().to_string(), total_characters));
     text_with_line_breaker(32, 21, CANVA.x - 35, array1, "E tudo isso foi feito com o auxílio do chat GPT, então não me responsabilizo por dicas incoerentes ou problemas do tipo!!!");
 
     text_draw (0,CANVA.x - 3, CANVA.y - 3, "right", array1, "Feito por: Henrique de Brito"); 

@@ -3,7 +3,6 @@ use std::io::Write;
 use draw_utils::{draw_horizontal_line, draw_vertical_line, set_to_blank};
 use handlers::{handle_lost, handle_menu, handle_playing, handle_turorial, handle_won};
 use winapi_util::console::Console;
-use rand::Rng;
 mod extra;
 mod draw_utils;
 mod handlers;
@@ -128,12 +127,6 @@ fn get_input() -> char {
     
 }
 
-fn get_random_num() -> usize {
-
-    let mut number = rand::thread_rng();
-
-    number.gen_range(0..extra::words().len())
-}
 
 
 
