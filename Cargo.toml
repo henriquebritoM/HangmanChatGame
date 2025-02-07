@@ -7,6 +7,7 @@ authors = ["Henrique Brito <https://github.com/henriquebritoM>"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+crossterm = "0.28.1"
 
 rand = "0.8.5"
 winapi-util = "0.1.6"
