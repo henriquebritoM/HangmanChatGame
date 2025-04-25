@@ -1,4 +1,5 @@
-use dutils::{CanvaX, Point};
+use crossterm::cursor;
+use dutils::{Canva, Point, Cursor};
 use handlers::{handle_lost, handle_menu, handle_playing, handle_turorial, handle_won};
 use std::io::Write;
 mod dutils;
@@ -23,7 +24,8 @@ pub const CANVA: Canva = Canva{
 */
 
 fn main() {
-    let canva: CanvaX = CanvaX::new(200, 40);
+    let mycursor: Cursor = Cursor::new(false, false);
+    let canva: Canva = Canva::new(200, 40, mycursor);
 
     let mut game_state: GameState = GameState::Menu;
     let mut points: u8 = 0;
@@ -93,13 +95,13 @@ enum GameState {
 }
 
 // this fn only returns the firs char (if the user writes more than one) because this games only requires one char as input
-fn get_input(canva: &CanvaX) -> char {
+fn get_input(canva: &Canva) -> char {
     let mut input: String = String::new();
     let mut temp_vec: Vec<char> = Vec::new();
     input.clear();
 
     canva.draw_horizontal_line(Point::new(3, canva.get_height() - 3), 100, ' ');
-    canva.set_cursor(&Point::new(3, canva.get_height() - 3)).unwrap();
+    canva.cursor.set_cursor(canva, &Point::new(3, canva.get_height() - 3)).unwrap();
 
     std::io::stdout().flush().unwrap();
 

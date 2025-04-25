@@ -1,4 +1,4 @@
-use std::io::{self, stdout, Write};
+use std::{io::{self, stdout, Write}, option};
 
 use crossterm::{self, cursor, style, QueueableCommand};
 
@@ -38,28 +38,74 @@ pub enum Alignment {
     Center,
 }
 
-//use crate::CANVA;
-#[derive(Debug)]
-pub struct CanvaX {
-    x: i16,
-    y: i16,
-}
-
 #[derive(Debug)]
 pub enum CursorError {
     CursorOutOfCanvas(String),
     PointTooBig(String)
 }
-pub enum CursorConfig {
-    AllowOutOfBounds,
-    OnlyInBound
+
+#[derive(Debug)]
+pub struct Cursor {
+    blinking: bool,
+    shown: bool,
+}
+
+impl Cursor {
+    pub fn new(blinking: bool, shown: bool) -> Cursor {
+        Cursor {blinking, shown}
+    }  
+    pub fn get_blink(&self) -> bool {
+        self.blinking
+    }
+    pub fn set_blink(&mut self, blinking: bool) {
+        self.blinking = blinking;
+    }
+    pub fn get_shown(&self) -> bool {
+        self.shown
+    }
+    pub fn set_shown(&mut self, show: bool) {
+        self.shown = show;
+    }
+    pub fn set_cursor(&self, canva: &Canva, point: &Point) -> Result<(), CursorError> {
+        let mut stdout = io::stdout();
+
+        if point.get_x() >= canva.get_width() 
+            {return Err(CursorError::CursorOutOfCanvas(format!("tried to move cursor to {:?} on x axis", point.get_x())));}
+        if point.get_y() >= canva.get_height() 
+            {return Err(CursorError::CursorOutOfCanvas(format!("tried to move cursor to {:?} on y axis", point.get_y())));}
+
+        let a: u16 = match u16::try_from(point.get_x()) {
+            Ok(u16) => u16,
+            Err(_) => {return Err(CursorError::PointTooBig(format!("tried to reach a negative point")));}
+        };
+        let b: u16 = match u16::try_from(point.get_y()) {
+            Ok(u16) => u16,
+            Err(_) => {return Err(CursorError::PointTooBig(format!("tried to reach a negative point")));}
+        };
+
+        stdout
+            .queue(cursor::MoveTo(a, b))
+            .unwrap();
+
+        return Ok(());
+    }
+
+}
+
+//use crate::CANVA;
+#[derive(Debug)]
+pub struct Canva {
+    x: i16,
+    y: i16,
+    pub cursor: Cursor,
+
 }
 
 #[allow(dead_code)]
-impl CanvaX {
+impl Canva {
     // creates the canva obj and the it's vector
     // it is a must to be able to convert i16 -> u16 due to crossterm 
-    pub fn new(width: i16, height: i16) -> CanvaX {
+    pub fn new(width: i16, height: i16, cursor: Cursor) -> Canva {
 
         match u16::try_from(width) {  
             Ok(u16) => u16,
@@ -71,9 +117,11 @@ impl CanvaX {
             Err(e) => panic!("{}", e)
         };
         
-        CanvaX {
+        Canva {
             x: width,
             y: height,
+            cursor: cursor
+
         }
     }
 
@@ -94,32 +142,8 @@ impl CanvaX {
         crossterm::terminal::Clear(crossterm::terminal::ClearType::All);
     }
 
-    pub fn set_cursor(&self, point: &Point) -> Result<(), CursorError> {
-        let mut stdout = io::stdout();
-
-        if point.get_x() >= self.get_width() 
-            {return Err(CursorError::CursorOutOfCanvas(format!("tried to move cursor to {:?} on x axis", point.get_x())));}
-        if point.get_y() >= self.get_height() 
-            {return Err(CursorError::CursorOutOfCanvas(format!("tried to move cursor to {:?} on y axis", point.get_y())));}
-
-        let a: u16 = match u16::try_from(point.get_x()) {
-            Ok(u16) => u16,
-            Err(_) => {return Err(CursorError::PointTooBig(format!("tried to reach a negative point")));}
-        };
-        let b: u16 = match u16::try_from(point.get_y()) {
-            Ok(u16) => u16,
-            Err(_) => {return Err(CursorError::PointTooBig(format!("tried to reach a negative point")));}
-        };
-
-        stdout
-            .queue(cursor::MoveTo(a, b))
-            .unwrap();
-
-        return Ok(());
-    }
-
     pub fn draw_char(&self, c: char, p: &Point) {
-        match self.set_cursor(&p) {
+        match self.cursor.set_cursor(self, &p) {
             Ok(_) => {let mut stdout = io::stdout();
                       stdout.queue(style::Print(c)).unwrap();},
             Err(_) => {}
@@ -300,3 +324,4 @@ pub fn str_to_char(string: &str) -> Vec<char> {
 
     char_vec
 }
+

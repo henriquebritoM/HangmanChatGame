@@ -1,11 +1,11 @@
 
 use crate::{
-    dutils::{str_to_char, Alignment, CanvaX, Point},
+    dutils::{str_to_char, Alignment, Canva, Point},
     extra::{self, Word, WORDS},
     get_input, GameState,
 };
 
-pub fn handle_menu(canva: &CanvaX, state: &mut GameState) {
+pub fn handle_menu(canva: &Canva, state: &mut GameState) {
     let mut input: char;
 
     menu_draw(&canva);
@@ -31,7 +31,7 @@ pub fn handle_menu(canva: &CanvaX, state: &mut GameState) {
     }
 }
 
-pub fn handle_turorial(canva: &CanvaX, state: &mut GameState) {
+pub fn handle_turorial(canva: &Canva, state: &mut GameState) {
     let mut input: char;
 
     turorial_draw(&canva);
@@ -54,7 +54,7 @@ pub fn handle_turorial(canva: &CanvaX, state: &mut GameState) {
 }
 
 // Each indepent element displayed on screen has a fn to help the organization
-pub fn handle_playing(canva: &CanvaX, state: &mut GameState, points: &mut u8) {
+pub fn handle_playing(canva: &Canva, state: &mut GameState, points: &mut u8) {
     let mut input: char;
     let word: Word = extra::get_word();
     let word_chars: Vec<char> = str_to_char(word.get_name());
@@ -164,7 +164,7 @@ pub fn handle_playing(canva: &CanvaX, state: &mut GameState, points: &mut u8) {
 }
 
 // This plays a little animation
-pub fn handle_won(canva: &CanvaX, state: &mut GameState) {
+pub fn handle_won(canva: &Canva, state: &mut GameState) {
     let text: [&str; 5] = [
         r#"     ____  ___    ____  ___    ____  _______   _______ ____"#,
         r#"    / __ \/   |  / __ \/   |  / __ )/ ____/ | / / ___// / /"#,
@@ -195,7 +195,7 @@ pub fn handle_won(canva: &CanvaX, state: &mut GameState) {
 }
 
 // This plays a little animation
-pub fn handle_lost(canva: &CanvaX, state: &mut GameState) {
+pub fn handle_lost(canva: &Canva, state: &mut GameState) {
     let text: [&str; 5] = [
         r#"    _________    __  _________   ____ _    ____________  ____ "#,
         r#"   / ____/   |  /  |/  / ____/  / __ \ |  / / ____/ __ \/ / / "#,
@@ -226,7 +226,7 @@ pub fn handle_lost(canva: &CanvaX, state: &mut GameState) {
 }
 
 // handler to menu
-fn menu_draw(canva: &CanvaX) {
+fn menu_draw(canva: &Canva) {
     let title: [&str; 6] = [
         r#"        __                         __         ____                       "#, // This same block of code appear a good amount of times, but Creating a fn just to print it would be confusing
         r#"       / /___  ____ _____     ____/ /___ _   / __/___  ______________ _  "#,
@@ -298,7 +298,7 @@ fn menu_draw(canva: &CanvaX) {
 
 // this section contains the drawers for each handler
 
-fn turorial_draw(canva: &CanvaX) {
+fn turorial_draw(canva: &Canva) {
     let title: [&str; 6] = [
         r#"        __                         __         ____                      "#,
         r#"       / /___  ____ _____     ____/ /___ _   / __/___  ______________ _ "#,
@@ -442,7 +442,7 @@ fn turorial_draw(canva: &CanvaX) {
 
 }
 
-fn playing_draw(canva: &CanvaX, points: &mut u8) {
+fn playing_draw(canva: &Canva, points: &mut u8) {
     let title: [&str; 6] = [
         r#"        __                         __         ____                      "#,
         r#"       / /___  ____ _____     ____/ /___ _   / __/___  ______________ _ "#,
@@ -467,7 +467,7 @@ fn playing_draw(canva: &CanvaX, points: &mut u8) {
     );
 }
 
-fn playing_draw_word(canva: &CanvaX, word: &str, word_hidden: &Vec<char>) {
+fn playing_draw_word(canva: &Canva, word: &str, word_hidden: &Vec<char>) {
 
     let mut top_left_point: Point = get_word_params(canva, word, word_hidden).0;
 
@@ -480,7 +480,7 @@ fn playing_draw_word(canva: &CanvaX, word: &str, word_hidden: &Vec<char>) {
     }
 }
 
-fn playing_erase_word(canva: &CanvaX, word: &str, word_hidden: &Vec<char>) {
+fn playing_erase_word(canva: &Canva, word: &str, word_hidden: &Vec<char>) {
 
     let (top_left_point, lenght, rows) = get_word_params(canva, word, word_hidden);
 
@@ -493,7 +493,7 @@ fn playing_erase_word(canva: &CanvaX, word: &str, word_hidden: &Vec<char>) {
     
 }
 
-fn get_word_params(canva: &CanvaX, word: &str, word_hidden: &Vec<char>) -> (Point, i16, i16) {
+fn get_word_params(canva: &Canva, word: &str, word_hidden: &Vec<char>) -> (Point, i16, i16) {
     let word_chars: Vec<char> = str_to_char(word);
     let top_left_corner: Point;
     let mut lenght: i16 = 0;
@@ -528,7 +528,7 @@ fn get_word_params(canva: &CanvaX, word: &str, word_hidden: &Vec<char>) -> (Poin
 
 }
 
-fn playing_draw_body(num: i8, canva: &CanvaX) {
+fn playing_draw_body(num: i8, canva: &Canva) {
     let head: ([&str; 6], [i16; 2]) = (
         [
             r#"      |      "#,
