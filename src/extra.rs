@@ -1,12 +1,28 @@
+use rand::Rng;
 
-pub fn words() -> [[&'static str; 2]; 150] {
+pub struct Word {
+    name: String,
+    description: String,
+}
 
+impl Word {
+    fn new(n: String, d: String) -> Word {
+        Word {
+            name: n,
+            description: d,
+        }
+    }
 
+    pub fn get_name(&self) -> &str {
+        &self.name.as_str()
+    }
 
+    pub fn get_description(&self) -> &str {
+        &self.description.as_str()
+    }
+}
 
-
-
-    let _words = [
+pub const WORDS: [[&str; 2]; 150] = [
     ["mesa", "Superfície plana e geralmente retangular, apoiada por pernas, usada para colocar objetos ou realizar refeições."],
     ["cadeira", "Assento comum com encosto, utilizado por uma pessoa para descansar ou se sentar confortavelmente."],
     ["luminaria", "Dispositivo elétrico ou a gás para iluminar ambientes, com diversas formas e tamanhos."],
@@ -157,293 +173,335 @@ pub fn words() -> [[&'static str; 2]; 150] {
     ["cistite", "Inflamação da bexiga, geralmente causada por infecção bacteriana e caracterizada por dor ao urinar e frequência urinária aumentada."],
     ["epilepsia", "Distúrbio neurológico caracterizado por convulsões recorrentes, que podem variar em intensidade e frequência."],
     ["catapora", "Infecção viral altamente contagiosa caracterizada por erupções cutâneas pruriginosas e febre."],
-    ];
-    _words
+];
 
-} 
+pub fn get_word() -> Word {
+    let num: usize = get_random_num();
+    let w: Word = Word::new(WORDS[num][0].to_owned(), WORDS[num][1].to_owned());
+    w
+}
 
-// The array contains the ascii representation of each letter in the alfabet, with a stardard height of 8 lines and a variable lenght, the usize passed in the tuple
-pub fn char_to_ascii(character: char) ->  ([&'static str; 8], i32) {
+fn get_random_num() -> usize {
+    let mut number = rand::thread_rng();
 
-    let ascii: ([&'static str; 8], i32);
+    number.gen_range(0..WORDS.len())
+}
 
-    let ascii_drawnings: [([&'static str; 8], i32); 28] = [
-         
-        ([
-        r#" "#,
-        r#" "#,
-        r#"  __ _ "#,
-        r#" / _` |"#,
-        r#"| (_| |"#,
-        r#" \__,_|"#,
-        r#" "#,
-        r#" "#], 7),
-
-        ([
-        r#" _ "#,
-        r#"| |"#,
-        r#"| |__"#,
-        r#"| '_ \ "#,
-        r#"| |_) |"#,
-        r#"|_.__/ "#,
-        r#" "#,
-        r#" "#], 7),
-
-        ([
-        r#" "#,
-        r#" "#,
-        r#"  ___ "#,
-        r#" / __|"#,
-        r#"| (__ "#,
-        r#" \___|"#,
-        r#" "#,
-        r#" "#], 6),
-
-        ([
-        r#"     _ "#,
-        r#"    | |"#,
-        r#"  __| |"#,
-        r#" / _` |"#,
-        r#"| (_| |"#,
-        r#" \__,_|"#,
-        r#" "#,
-        r#" "#], 7),
-
-        ([
-        r#" "#,
-        r#" "#,
-        r#"  ___ "#,
-        r#" / _ \"#,
-        r#"|  __/"#,
-        r#" \___|"#,
-        r#" "#,
-        r#" "#], 6),
-
-        ([
-        r#"  __"#,
-        r#" / _| "#,
-        r#"| |_ "#,
-        r#"|  _| "#,
-        r#"| |  "#,
-        r#"|_|  "#,
-        r#" "#,
-        r#" "#], 5),
-
-        ([
-        r#" "#,
-        r#" "#,
-        r#"  __ _ "#,
-        r#" / _` |"#,
-        r#"| (_| |"#,
-        r#" \__, |"#,
-        r#"  __/ |"#,
-        r#" |___/ "#], 7),
-
-        ([
-        r#" _"#,
-        r#"| |"#,
-        r#"| |_"#,
-        r#"| '_ \"#,
-        r#"| | | |"#,
-        r#"|_| |_|"#,
-        r#" "#,
-        r#" "#], 7),
-
-        ([
-        r#" _"#,
-        r#"(_)"#,
-        r#" _ "#,
-        r#"| |"#,
-        r#"| |"#,
-        r#"|_|"#,
-        r#" "#,
-        r#" "#], 3),
-
-        ([
-        r#"   _ "#,
-        r#"  (_)"#,
-        r#"   _ "#,
-        r#"  | |"#,
-        r#"  | |"#,
-        r#"  | |"#,
-        r#" _/ |"#,
-        r#"|__/ "#], 5),
-
-        ([
-        r#" _"#,
-        r#"| |"#,
-        r#"| | __"#,
-        r#"| |/ / "#,
-        r#"|   < "#,
-        r#"|_|\_\"#,
-        r#" "#,
-        r#" "#], 6),
-
-        ([
-        r#" _"#,
-        r#"| |"#,
-        r#"| |"#,
-        r#"| |"#,
-        r#"| |"#,
-        r#"|_|"#,
-        r#" "#,
-        r#" "#], 3),
-
-        ([
-        r#" "#,
-        r#" "#,
-        r#" _ __ _ __ "#,
-        r#"| '_ ` _  \"#,
-        r#"| | | | | |"#,
-        r#"|_| |_| |_|"#,
-        r#" "#,
-        r#" "#], 11),
-
-        ([
-        r#" "#,
-        r#" "#,
-        r#" _ __ "#,
-        r#"| '_ \ "#,
-        r#"| | | |"#,
-        r#"|_| |_|"#,
-        r#" "#,
-        r#" "#], 7),
-
-        
-        ([
-        r#" "#,
-        r#" "#,
-        r#"  ___ "#,
-        r#" / _ \ "#,
-        r#"| (_) |"#,
-        r#" \___/"#,
-        r#" "#,
-        r#" "#], 7),
-
-        ([
-        r#" "#,
-        r#" "#,
-        r#" _ __ "#,
-        r#"| '_ \ "#,
-        r#"| |_) |"#,
-        r#"| .__/ "#,
-        r#"| |"#,
-        r#"|_|"#], 7),
-
-        ([
-        r#" "#,
-        r#" "#,
-        r#"  __ _ "#,
-        r#" / _` |"#,
-        r#"| (_| |"#,
-        r#" \__, |"#,
-        r#"    | |"#,
-        r#"    |_|"#], 7),
-
-        ([
-        r#" "#,
-        r#" "#,
-        r#" _ __ "#,
-        r#"| '__|"#,
-        r#"| |"#,
-        r#"|_|"#,
-        r#" "#,
-        r#" "#], 6),
-
-        ([
-        r#" "#,
-        r#" "#,
-        r#" ___"#,
-        r#"/ __|"#,
-        r#"\__ \ "#,
-        r#"|___/"#,
-        r#" "#,
-        r#" "#], 5),
-
-        ([
-        r#" _"#,
-        r#"| |"#,
-        r#"| |"#,
-        r#"| __|"#,
-        r#"| |_"#,
-        r#" \__|"#,
-        r#" "#,
-        r#" "#], 5),
-
-        ([
-        r#" "#,
-        r#" "#,
-        r#" _   _ "#,
-        r#"| | | |"#,
-        r#"| |_| |"#,
-        r#" \__,_|"#,
-        r#" "#,
-        r#" "#], 7),
-
-        ([
-        r#" "#,
-        r#" "#,
-        r#"__   __"#,
-        r#"\ \ / /"#,
-        r#" \ V /"#,
-        r#"  \_/ "#,
-        r#" "#,
-        r#" "#], 7),
-
-        ([
-        r#" "#,
-        r#" "#,
-        r#"__      __"#,
-        r#"\ \ /\ / /"#,
-        r#" \ V  V / "#,
-        r#"  \_/\_/  "#,
-        r#" "#,
-        r#" "#], 11),
-
-        ([
-        r#" "#,
-        r#" "#,
-        r#"__  __"#,
-        r#"\ \/ /"#,
-        r#" >  <"#,
-        r#"/_/\_\"#,
-        r#" "#,
-        r#" "#], 7),
-
-        ([
-        r#" "#,
-        r#" "#,
-        r#" _   _ "#,
-        r#"| | | |"#,
-        r#"| |_| |"#,
-        r#" \__, |"#,
-        r#"  __/ |"#,
-        r#" |___/ "#], 7),
-        
-        ([
-        r#" "#,
-        r#" "#,
-        r#" ____"#,
-        r#"|_  /"#,
-        r#" / /"#,
-        r#"/___|"#,
-        r#" "#,
-        r#" "#], 5),
-
-
-        // This is the ascii of a space, nothing important, it just pass some usize value to be used as a space
-        ([ 
+const ASCII_LETTERS: [([&str; 8], i16); 28] = [
+    (
+        [
             r#" "#,
             r#" "#,
+            r#"  __ _ "#,
+            r#" / _` |"#,
+            r#"| (_| |"#,
+            r#" \__,_|"#,
             r#" "#,
             r#" "#,
+        ],
+        7,
+    ),
+    (
+        [
+            r#" _ "#,
+            r#"| |"#,
+            r#"| |__"#,
+            r#"| '_ \ "#,
+            r#"| |_) |"#,
+            r#"|_.__/ "#,
             r#" "#,
             r#" "#,
+        ],
+        7,
+    ),
+    (
+        [
             r#" "#,
-            r#" "#], 7),
-
-        // This is the ascii for an _, this is important!
-        ([ 
+            r#" "#,
+            r#"  ___ "#,
+            r#" / __|"#,
+            r#"| (__ "#,
+            r#" \___|"#,
+            r#" "#,
+            r#" "#,
+        ],
+        6,
+    ),
+    (
+        [
+            r#"     _ "#,
+            r#"    | |"#,
+            r#"  __| |"#,
+            r#" / _` |"#,
+            r#"| (_| |"#,
+            r#" \__,_|"#,
+            r#" "#,
+            r#" "#,
+        ],
+        7,
+    ),
+    (
+        [
+            r#" "#,
+            r#" "#,
+            r#"  ___ "#,
+            r#" / _ \"#,
+            r#"|  __/"#,
+            r#" \___|"#,
+            r#" "#,
+            r#" "#,
+        ],
+        6,
+    ),
+    (
+        [
+            r#"  __"#,
+            r#" / _| "#,
+            r#"| |_ "#,
+            r#"|  _| "#,
+            r#"| |  "#,
+            r#"|_|  "#,
+            r#" "#,
+            r#" "#,
+        ],
+        5,
+    ),
+    (
+        [
+            r#" "#,
+            r#" "#,
+            r#"  __ _ "#,
+            r#" / _` |"#,
+            r#"| (_| |"#,
+            r#" \__, |"#,
+            r#"  __/ |"#,
+            r#" |___/ "#,
+        ],
+        7,
+    ),
+    (
+        [
+            r#" _"#,
+            r#"| |"#,
+            r#"| |_"#,
+            r#"| '_ \"#,
+            r#"| | | |"#,
+            r#"|_| |_|"#,
+            r#" "#,
+            r#" "#,
+        ],
+        7,
+    ),
+    (
+        [
+            r#" _"#, r#"(_)"#, r#" _ "#, r#"| |"#, r#"| |"#, r#"|_|"#, r#" "#, r#" "#,
+        ],
+        3,
+    ),
+    (
+        [
+            r#"   _ "#, r#"  (_)"#, r#"   _ "#, r#"  | |"#, r#"  | |"#, r#"  | |"#, r#" _/ |"#,
+            r#"|__/ "#,
+        ],
+        5,
+    ),
+    (
+        [
+            r#" _"#,
+            r#"| |"#,
+            r#"| | __"#,
+            r#"| |/ / "#,
+            r#"|   < "#,
+            r#"|_|\_\"#,
+            r#" "#,
+            r#" "#,
+        ],
+        6,
+    ),
+    (
+        [
+            r#" _"#, r#"| |"#, r#"| |"#, r#"| |"#, r#"| |"#, r#"|_|"#, r#" "#, r#" "#,
+        ],
+        3,
+    ),
+    (
+        [
+            r#" "#,
+            r#" "#,
+            r#" _ __ _ __ "#,
+            r#"| '_ ` _  \"#,
+            r#"| | | | | |"#,
+            r#"|_| |_| |_|"#,
+            r#" "#,
+            r#" "#,
+        ],
+        11,
+    ),
+    (
+        [
+            r#" "#,
+            r#" "#,
+            r#" _ __ "#,
+            r#"| '_ \ "#,
+            r#"| | | |"#,
+            r#"|_| |_|"#,
+            r#" "#,
+            r#" "#,
+        ],
+        7,
+    ),
+    (
+        [
+            r#" "#,
+            r#" "#,
+            r#"  ___ "#,
+            r#" / _ \ "#,
+            r#"| (_) |"#,
+            r#" \___/"#,
+            r#" "#,
+            r#" "#,
+        ],
+        7,
+    ),
+    (
+        [
+            r#" "#,
+            r#" "#,
+            r#" _ __ "#,
+            r#"| '_ \ "#,
+            r#"| |_) |"#,
+            r#"| .__/ "#,
+            r#"| |"#,
+            r#"|_|"#,
+        ],
+        7,
+    ),
+    (
+        [
+            r#" "#,
+            r#" "#,
+            r#"  __ _ "#,
+            r#" / _` |"#,
+            r#"| (_| |"#,
+            r#" \__, |"#,
+            r#"    | |"#,
+            r#"    |_|"#,
+        ],
+        7,
+    ),
+    (
+        [
+            r#" "#,
+            r#" "#,
+            r#" _ __ "#,
+            r#"| '__|"#,
+            r#"| |"#,
+            r#"|_|"#,
+            r#" "#,
+            r#" "#,
+        ],
+        6,
+    ),
+    (
+        [
+            r#" "#,
+            r#" "#,
+            r#" ___"#,
+            r#"/ __|"#,
+            r#"\__ \ "#,
+            r#"|___/"#,
+            r#" "#,
+            r#" "#,
+        ],
+        5,
+    ),
+    (
+        [
+            r#" _"#, r#"| |"#, r#"| |"#, r#"| __|"#, r#"| |_"#, r#" \__|"#, r#" "#, r#" "#,
+        ],
+        5,
+    ),
+    (
+        [
+            r#" "#,
+            r#" "#,
+            r#" _   _ "#,
+            r#"| | | |"#,
+            r#"| |_| |"#,
+            r#" \__,_|"#,
+            r#" "#,
+            r#" "#,
+        ],
+        7,
+    ),
+    (
+        [
+            r#" "#,
+            r#" "#,
+            r#"__   __"#,
+            r#"\ \ / /"#,
+            r#" \ V /"#,
+            r#"  \_/ "#,
+            r#" "#,
+            r#" "#,
+        ],
+        7,
+    ),
+    (
+        [
+            r#" "#,
+            r#" "#,
+            r#"__      __"#,
+            r#"\ \ /\ / /"#,
+            r#" \ V  V / "#,
+            r#"  \_/\_/  "#,
+            r#" "#,
+            r#" "#,
+        ],
+        11,
+    ),
+    (
+        [
+            r#" "#,
+            r#" "#,
+            r#"__  __"#,
+            r#"\ \/ /"#,
+            r#" >  <"#,
+            r#"/_/\_\"#,
+            r#" "#,
+            r#" "#,
+        ],
+        7,
+    ),
+    (
+        [
+            r#" "#,
+            r#" "#,
+            r#" _   _ "#,
+            r#"| | | |"#,
+            r#"| |_| |"#,
+            r#" \__, |"#,
+            r#"  __/ |"#,
+            r#" |___/ "#,
+        ],
+        7,
+    ),
+    (
+        [
+            r#" "#, r#" "#, r#" ____"#, r#"|_  /"#, r#" / /"#, r#"/___|"#, r#" "#, r#" "#,
+        ],
+        5,
+    ),
+    // This is the ascii of a space, nothing important, it just pass some usize value to be used as a space
+    (
+        [
+            r#" "#, r#" "#, r#" "#, r#" "#, r#" "#, r#" "#, r#" "#, r#" "#,
+        ],
+        7,
+    ),
+    // This is the ascii for an _, this is important!
+    (
+        [
             r#" "#,
             r#" "#,
             r#" "#,
@@ -451,41 +509,46 @@ pub fn char_to_ascii(character: char) ->  ([&'static str; 8], i32) {
             r#" "#,
             r#" __________"#,
             r#" "#,
-            r#" "#], 11),
-        
-    ];
+            r#" "#,
+        ],
+        11,
+    ),
+];
+
+// The array contains the ascii representation of each letter in the alfabet, with a stardard height of 8 lines and a variable lenght, the usize passed in the tuple
+pub fn char_to_ascii(character: char) -> ([&'static str; 8], i16) {
+    let ascii: ([&'static str; 8], i16);
 
     match character {
-        'a' => ascii = ascii_drawnings[0],
-        'b' => ascii = ascii_drawnings[1],
-        'c' => ascii = ascii_drawnings[2],
-        'd' => ascii = ascii_drawnings[3],
-        'e' => ascii = ascii_drawnings[4],
-        'f' => ascii = ascii_drawnings[5],
-        'g' => ascii = ascii_drawnings[6],
-        'h' => ascii = ascii_drawnings[7],
-        'i' => ascii = ascii_drawnings[8],
-        'j' => ascii = ascii_drawnings[9],
-        'k' => ascii = ascii_drawnings[10],
-        'l' => ascii = ascii_drawnings[11],
-        'm' => ascii = ascii_drawnings[12],
-        'n' => ascii = ascii_drawnings[13],
-        'o' => ascii = ascii_drawnings[14],
-        'p' => ascii = ascii_drawnings[15],
-        'q' => ascii = ascii_drawnings[16],
-        'r' => ascii = ascii_drawnings[17],
-        's' => ascii = ascii_drawnings[18],
-        't' => ascii = ascii_drawnings[19],
-        'u' => ascii = ascii_drawnings[20],
-        'v' => ascii = ascii_drawnings[21],
-        'w' => ascii = ascii_drawnings[22],
-        'x' => ascii = ascii_drawnings[23],
-        'y' => ascii = ascii_drawnings[24],
-        'z' => ascii = ascii_drawnings[25],
-        ' ' => ascii = ascii_drawnings[26],
-        '_' => ascii = ascii_drawnings[27],
+        'a' => ascii = ASCII_LETTERS[0],
+        'b' => ascii = ASCII_LETTERS[1],
+        'c' => ascii = ASCII_LETTERS[2],
+        'd' => ascii = ASCII_LETTERS[3],
+        'e' => ascii = ASCII_LETTERS[4],
+        'f' => ascii = ASCII_LETTERS[5],
+        'g' => ascii = ASCII_LETTERS[6],
+        'h' => ascii = ASCII_LETTERS[7],
+        'i' => ascii = ASCII_LETTERS[8],
+        'j' => ascii = ASCII_LETTERS[9],
+        'k' => ascii = ASCII_LETTERS[10],
+        'l' => ascii = ASCII_LETTERS[11],
+        'm' => ascii = ASCII_LETTERS[12],
+        'n' => ascii = ASCII_LETTERS[13],
+        'o' => ascii = ASCII_LETTERS[14],
+        'p' => ascii = ASCII_LETTERS[15],
+        'q' => ascii = ASCII_LETTERS[16],
+        'r' => ascii = ASCII_LETTERS[17],
+        's' => ascii = ASCII_LETTERS[18],
+        't' => ascii = ASCII_LETTERS[19],
+        'u' => ascii = ASCII_LETTERS[20],
+        'v' => ascii = ASCII_LETTERS[21],
+        'w' => ascii = ASCII_LETTERS[22],
+        'x' => ascii = ASCII_LETTERS[23],
+        'y' => ascii = ASCII_LETTERS[24],
+        'z' => ascii = ASCII_LETTERS[25],
+        ' ' => ascii = ASCII_LETTERS[26],
+        '_' => ascii = ASCII_LETTERS[27],
         _ => panic!("erro ao transformar char em ascii"),
     }
-
     ascii
 }
