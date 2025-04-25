@@ -1,10 +1,16 @@
+/*  This file contains the handlers for each game state */
+/*  Each handler has autonomy over the canvas and the
+ *  game behaviour.
+ */
 
+//-------------------------- Crates declaration --------------------------//
 use crate::{
     dutils::{str_to_char, Alignment, Canva, Point},
     extra::{self, Word, WORDS},
     get_input, GameState,
 };
 
+//-------------------------- Handlers declaration --------------------------//
 pub fn handle_menu(canva: &Canva, state: &mut GameState) {
     let mut input: char;
 

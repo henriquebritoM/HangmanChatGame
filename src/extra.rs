@@ -1,12 +1,29 @@
+/*  Auxiliary game file */
+/*  This file has ASCII representations of 
+ *  the 26 letters in the alphabet and keywords
+ *  with their descriptions.
+ *  The contents of this file are meant to be 
+ *  accessed through the functions.
+ */
+
+//
+//-------------------------- Crates declaration --------------------------//
+//
 use rand::Rng;
 
+//-------------------------- declaration of struct Word --------------------------//
 pub struct Word {
+    /*  This struct is a pair of one keyword and its
+     *  description that are grouped and can be aeasily
+     *  accessed from other files when necessary.
+     */
     name: String,
     description: String,
 }
 
+//-------------------------- impl of struct Word --------------------------//
 impl Word {
-    fn new(n: String, d: String) -> Word {
+    fn new(n: String, d: String) -> Word {    
         Word {
             name: n,
             description: d,
@@ -22,6 +39,13 @@ impl Word {
     }
 }
 
+//-------------------------- declaration of const WORDS --------------------------//
+/*  WORDS is a collection of many keywords and its description
+ *  Each one of the pairs is meant to be converted in a
+ *  Word struct instead of being directely accessed  
+ * 
+ *  [&str; 2] <- the first &str is the word, the second is the description
+ */
 pub const WORDS: [[&str; 2]; 150] = [
     ["mesa", "Superfície plana e geralmente retangular, apoiada por pernas, usada para colocar objetos ou realizar refeições."],
     ["cadeira", "Assento comum com encosto, utilizado por uma pessoa para descansar ou se sentar confortavelmente."],
@@ -175,19 +199,35 @@ pub const WORDS: [[&str; 2]; 150] = [
     ["catapora", "Infecção viral altamente contagiosa caracterizada por erupções cutâneas pruriginosas e febre."],
 ];
 
+//-------------------------- functions declaration --------------------------//
 pub fn get_word() -> Word {
+    /*  Returns a struct Word made with a
+     *  random word from the const WORDS
+     */
     let num: usize = get_random_num();
     let w: Word = Word::new(WORDS[num][0].to_owned(), WORDS[num][1].to_owned());
     w
 }
 
 fn get_random_num() -> usize {
+    // Returns a random number within the range of the const WORDS
+
     let mut number = rand::thread_rng();
 
     number.gen_range(0..WORDS.len())
 }
 
+//-------------------------- ASCII letters --------------------------//
 const ASCII_LETTERS: [([&str; 8], i16); 28] = [
+    /*  ASCII versions of the 26 letters of the alphabet,
+     *  as well as a ' ' and a '_'.
+     *  This helps when writing ASCII words in the chatgame
+     * 
+     *  The data type is made of:
+     *  [&str; 8] <- The ascii letter itself, some use up to 8 lines to be drawn, so 8 is the standard slice number to keep consistency
+     *  i16 <- the maximum length of the letter, used when minimum space for the letters to not overlap
+     *  28 <- the 26 alphabet letters + an ' ' (space) + an '_' (underscore)
+     */
     (
         [
             r#" "#,
@@ -294,13 +334,26 @@ const ASCII_LETTERS: [([&str; 8], i16); 28] = [
     ),
     (
         [
-            r#" _"#, r#"(_)"#, r#" _ "#, r#"| |"#, r#"| |"#, r#"|_|"#, r#" "#, r#" "#,
+            r#" _"#, 
+            r#"(_)"#, 
+            r#" _ "#, 
+            r#"| |"#, 
+            r#"| |"#, 
+            r#"|_|"#, 
+            r#" "#, 
+            r#" "#,
         ],
         3,
     ),
     (
         [
-            r#"   _ "#, r#"  (_)"#, r#"   _ "#, r#"  | |"#, r#"  | |"#, r#"  | |"#, r#" _/ |"#,
+            r#"   _ "#, 
+            r#"  (_)"#, 
+            r#"   _ "#, 
+            r#"  | |"#, 
+            r#"  | |"#, 
+            r#"  | |"#, 
+            r#" _/ |"#,
             r#"|__/ "#,
         ],
         5,
@@ -320,7 +373,14 @@ const ASCII_LETTERS: [([&str; 8], i16); 28] = [
     ),
     (
         [
-            r#" _"#, r#"| |"#, r#"| |"#, r#"| |"#, r#"| |"#, r#"|_|"#, r#" "#, r#" "#,
+            r#" _"#, 
+            r#"| |"#, 
+            r#"| |"#, 
+            r#"| |"#, 
+            r#"| |"#, 
+            r#"|_|"#, 
+            r#" "#, 
+            r#" "#,
         ],
         3,
     ),
@@ -417,7 +477,14 @@ const ASCII_LETTERS: [([&str; 8], i16); 28] = [
     ),
     (
         [
-            r#" _"#, r#"| |"#, r#"| |"#, r#"| __|"#, r#"| |_"#, r#" \__|"#, r#" "#, r#" "#,
+            r#" _"#, 
+            r#"| |"#, 
+            r#"| |"#, 
+            r#"| __|"#, 
+            r#"| |_"#, 
+            r#" \__|"#, 
+            r#" "#, 
+            r#" "#,
         ],
         5,
     ),
@@ -488,18 +555,34 @@ const ASCII_LETTERS: [([&str; 8], i16); 28] = [
     ),
     (
         [
-            r#" "#, r#" "#, r#" ____"#, r#"|_  /"#, r#" / /"#, r#"/___|"#, r#" "#, r#" "#,
+            r#" "#, 
+            r#" "#, 
+            r#" ____"#, 
+            r#"|_  /"#, 
+            r#" / /"#, 
+            r#"/___|"#, 
+            r#" "#, 
+            r#" "#,
         ],
         5,
     ),
-    // This is the ascii of a space, nothing important, it just pass some usize value to be used as a space
+
+    // This is the ascii of a space, the length itself is the more valuable data, usually used to separete words
     (
         [
-            r#" "#, r#" "#, r#" "#, r#" "#, r#" "#, r#" "#, r#" "#, r#" "#,
+            r#" "#, 
+            r#" "#, 
+            r#" "#, 
+            r#" "#, 
+            r#" "#, 
+            r#" "#, 
+            r#" "#, 
+            r#" "#,
         ],
         7,
     ),
-    // This is the ascii for an _, this is important!
+
+    // This is the ascii for an '_'
     (
         [
             r#" "#,
@@ -515,8 +598,13 @@ const ASCII_LETTERS: [([&str; 8], i16); 28] = [
     ),
 ];
 
-// The array contains the ascii representation of each letter in the alfabet, with a stardard height of 8 lines and a variable lenght, the usize passed in the tuple
+
 pub fn char_to_ascii(character: char) -> ([&'static str; 8], i16) {
+    /*  Receives and char and returns an ascii version of it
+     *  [&'static str; 8] <- is the char itself, cut in 8 slices
+     *  i16 <- is the length of the ascii character, used to calculate
+     *  the spacing between each one.
+     */
     let ascii: ([&'static str; 8], i16);
 
     match character {
