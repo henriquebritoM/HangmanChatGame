@@ -6,42 +6,12 @@ mod dutils;
 mod extra;
 mod handlers;
 
-/*
-pub struct Canva {
-    x: u32,
-    y: u32,
-    xu: usize,
-    yu: usize
-}
-//pub const CANVA: Canva = Canva::new(200, 40);
-
-pub const CANVA: Canva = Canva{
-    x: 200,
-    y: 40,
-    xu: 200,
-    yu: 40
-};
-*/
-
 fn main() {
     let mycursor: Cursor = Cursor::new(false, false);
     let canva: Canva = Canva::new(200, 40, mycursor);
 
     let mut game_state: GameState = GameState::Menu;
     let mut points: u8 = 0;
-
-    /*   this makes possible change the cursor pos in the windows terminal
-    if let Ok(mut term) = Console::stdout() {
-        let _ = term.set_virtual_terminal_processing(true);
-    }
-    if let Ok(mut term) = Console::stderr() {
-        let _ = term.set_virtual_terminal_processing(true);
-    }
-    */
-    /*
-    println!("\x1b[?25l");
-    println!("\x1b[=0h");
-    */
 
     loop {
         //game main loop

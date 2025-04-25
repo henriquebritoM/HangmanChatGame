@@ -286,7 +286,6 @@ impl Canva {
         let mut c_point: Point = Point::new(start.get_x(), start.get_y());
         let mut pos: usize = 0;
         let mut temp_str: String = String::new();
-        //let end: i16 = start.get_x() + i16::try_from(max_len).unwrap(); legacy code, don't know what it
 
         loop {
             if (word_chars.len() - pos) <= max_len {
