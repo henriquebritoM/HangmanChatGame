@@ -1,6 +1,7 @@
 /*  This is the main game file */
 /*  Last updated: 25/04/2025 */
 /*  Chatgame intended for windows, not sure if it works on linux */
+/*  This game seems to not work properly with windows 11 ! */
 
 //
 //-------------------------- Crates declaration --------------------------//

@@ -11,10 +11,16 @@ use crate::{
 };
 
 //-------------------------- Handlers declaration --------------------------//
+
 pub fn handle_menu(canva: &Canva, state: &mut GameState) {
+    /*  Default screen.   
+     *  Waits for the user to type a valid char
+     *  Change the game state according to the 
+     *  chat typed
+     */
     let mut input: char;
 
-    menu_draw(&canva);
+    menu_draw(&canva);                                                  //fn to draw the menu
 
     loop {
         input = get_input(canva);
@@ -38,9 +44,14 @@ pub fn handle_menu(canva: &Canva, state: &mut GameState) {
 }
 
 pub fn handle_turorial(canva: &Canva, state: &mut GameState) {
+    /*  Displays a mini tutorial on how to play the game
+     *  Waits for the user to type a valid char
+     *  Change the game state according to the
+     *  char typed
+     */
     let mut input: char;
 
-    turorial_draw(&canva);
+    turorial_draw(&canva);                                          //fn to draw the tutorial
 
     loop {
         input = get_input(canva);
@@ -61,71 +72,99 @@ pub fn handle_turorial(canva: &Canva, state: &mut GameState) {
 
 // Each indepent element displayed on screen has a fn to help the organization
 pub fn handle_playing(canva: &Canva, state: &mut GameState, points: &mut u8) {
-    let mut input: char;
-    let word: Word = extra::get_word();
-    let word_chars: Vec<char> = str_to_char(word.get_name());
-    let mut word_hidden: Vec<char> = Vec::new();
-    let mut used_chars: [char; 26] = ['_'; 26];
-    let alphabet: [char; 26] = [
+    /*  Handles the actual gameplay
+     *  Draws the playing display, the hints, the hangman and the word ('_' for the
+     *  letters yet to be discovered)
+     */
+
+    let mut input: char;                                                //The char typed by the player
+    let word: Word = extra::get_word();                                 //Instances a struct Word, that contains a word and its description 
+    let word_chars: Vec<char> = str_to_char(word.get_name());   //Separates the word in its chars 
+    let mut word_hidden: Vec<char> = Vec::new();                        //Declares the word that will be displayed to the player, 
+                                                                        //uses '_' for the letters that were not discovered (example: _lay_r [player])
+    let mut used_chars: [char; 26] = ['_'; 26];                         //Array of the used chars, prevents player losing more than one live for the same letter
+                                                                        //Is displayed as 26 '_', letters are added as the player makes guesses
+    let alphabet: [char; 26] = [                                        //Array with valid alphabet's letters
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
         's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
     ];
-    let mut errors: i8 = 0;
-    let mut is_wrong_letter: bool;
+    let mut errors: i8 = 0;                                             //Stores the times the player guessed a letter wrong
+    let mut is_wrong_letter: bool;                                      //Bool for when the player guesses an letter that is not in the word
 
+    //At first, the word displayed to the user is hidden (with '_')
+    //Initialize the word_hidden with '_'
+    //Later they will be replaced with actual letter, as the player guess right
     for _el in &word_chars {
         word_hidden.push('_');
     }
 
-    playing_draw(&canva, points);
-    playing_draw_word(canva, word.get_name(), &word_hidden);
+    playing_draw(&canva, points);                                       //fn to draw the playing screen
+    playing_draw_word(canva, word.get_name(), &word_hidden);            //fn to draw the word_hidden 
+    
+    //This block drawns the borders of the 'hangman''s area
+    {
+        canva.draw_horizontal_line(Point::new(2, 22), 18, '=');
+        canva.draw_vertical_line(Point::new(19, 11),11, '|');
+    }
 
-    canva.draw_horizontal_line(Point::new(2, 22), 18, '=');
-    canva.draw_vertical_line(Point::new(19, 11),11, '|');
-    // prints the 'hint'
-    let text_left_corner: Point = Point::new(canva.get_width() / 4 * 3 + 2, 16);
-    canva.text_with_line_breaker(
-        &text_left_corner,
-        usize::try_from(canva.get_width() - canva.get_width() / 4 * 3 - 4).unwrap(),
-        
-        word.get_description(),
-    );
+    // prints the 'hint' in the right corner of the canvas
+    {
+        let text_left_corner: Point = Point::new(canva.get_width() / 4 * 3 + 2, 16);
+        canva.text_with_line_breaker(
+            &text_left_corner,
+            usize::try_from(canva.get_width() - canva.get_width() / 4 * 3 - 4).unwrap(),
+            
+            word.get_description(),
+        );
+    }
 
     'playing: loop {
+        //main loop for playing
+        //Loops until
 
-        is_wrong_letter = true; // There is an error unless the program says that there isnt
-        input = get_input(canva);
+        is_wrong_letter = true;                                 // Initializa as an error, changes if there isn't one
+        input = get_input(canva);                               //get an input char from the user
 
         if input == '3' {
+            //  If the user presses 3 breaks the playing loop and 
+            //  changes the gamestate to 'Quit' (later to stop the main loop)
             *state = GameState::Quit;
             break 'playing;
         }
         if !input.is_alphabetic() {
+            //  returns to the top of playing loop if the char input is not valid
+            //  The code below assumes that the char is valid
             continue 'playing;
-        } // Checks if the input is valid
+        }
 
         for el in used_chars {
+            //  The char is valid, but it has already been typed
+            //  returns to the top of playing loop
             if input == el {
                 continue 'playing;
             }
         }
 
         for el in 0..alphabet.len() {
+            //  The char is valid
+            //  Update the list of used chars with the newly typed char
             if input == alphabet[el] {
                 used_chars[el] = input;
                 break;
-            } else {
-                continue;
-            }
+            } 
+            // else {
+            //     continue;
+            // }
         }
-
+        
+        //  Draws a text: "Letras usadas: " in the bottom left corner
         canva.text_draw(
             &Point::new(3, canva.get_height() - 4),
             &Alignment::Left,
             "Letras usadas: ",
         );
+        //  This block draws the letters used (from word_hidden) in the bottom left corner 
         {
-            //draw individualy each one one the used letter ( '_' if not used)
             let mut point: Point = Point::new(18, canva.get_height() - 4);
             for char in used_chars {
                 canva.draw_char(char, &point);
@@ -133,8 +172,14 @@ pub fn handle_playing(canva: &Canva, state: &mut GameState, points: &mut u8) {
             }
         }
 
-        playing_erase_word(&canva, word.get_name(), &word_hidden);
+        //  For each new letter discovered in the word, is necessary to erase the area
+        //  in order to write the updated version on top
+        //  this fn erases the area
+        playing_erase_word(&canva, word.get_name(), &word_hidden);                  
 
+        //  Checks if the typed letter is, in fact, in the word to be guessed
+        //  if it is, update the word_hidden to display the new discovered letter
+        //  and changes is_wrong_letter to false, the letter is correct
         for el in 0..word_chars.len() {
             if word_chars[el] == input {
                 word_hidden[el] = input;
@@ -142,35 +187,39 @@ pub fn handle_playing(canva: &Canva, state: &mut GameState, points: &mut u8) {
             }
         }
 
+        //  Redraws the word_hidden with the new discovered letter
         playing_draw_word(canva, word.get_name(), &word_hidden);
 
+        //  Increases the counter of errors if the char type is not in the word
         if is_wrong_letter {
             errors += 1;
         }
 
+        //  Draws the body parts of the hangman according to the number of errors
         if errors > 0 && errors < 7 {
             playing_draw_body(errors, &canva)
         }
 
+        //  The player has more than the max number of errors
+        //  Resets the points, changes the gamestate and breaks the playing loop
         if errors == 6 {
             *points = 0;
             *state = GameState::Lost;
             break 'playing;
         }
 
-        // The player has discovered the word
+        //  The player has discovered all the letters in the word
+        //  Increase their points, change the gamestate and breaks the playing loop  
         if word_hidden == word_chars {
             *points += 1;
             *state = GameState::Won;
             break 'playing;
         }
-
-        // The player has commited too many errors
     }
 }
 
-// This plays a little animation
 pub fn handle_won(canva: &Canva, state: &mut GameState) {
+    //  Plays a little victory animation
     let text: [&str; 5] = [
         r#"     ____  ___    ____  ___    ____  _______   _______ ____"#,
         r#"    / __ \/   |  / __ \/   |  / __ )/ ____/ | / / ___// / /"#,
@@ -179,6 +228,8 @@ pub fn handle_won(canva: &Canva, state: &mut GameState) {
         r#" /_/   /_/  |_/_/ |_/_/  |_/_____/_____/_/ |_//____(_|_)   "#,
     ];
 
+    //  Makes the animation move from the right to left
+    //  Redraws some background lines that are erased during the animation
     for num in 1..canva.get_width() - 2 {
         std::thread::sleep(std::time::Duration::from_millis(15));
 
@@ -191,6 +242,7 @@ pub fn handle_won(canva: &Canva, state: &mut GameState) {
         canva.draw_ascii(&text, &Point::new(num - canva.get_width() / 2, 2), &Alignment::Center);
     }
 
+    //  Redraws the side lines that were erased in the animation
     canva.draw_vertical_line(Point::new(2, 1), 9, '#');
     canva.draw_vertical_line(Point::new(0, 1), 9, '|');
     canva.draw_vertical_line(Point::new(1, 1), 9, '|');
@@ -233,8 +285,9 @@ pub fn handle_lost(canva: &Canva, state: &mut GameState) {
 
 // handler to menu
 fn menu_draw(canva: &Canva) {
+    // This same block of code appear a good amount of times, but Creating a fn just to print it would be confusing
     let title: [&str; 6] = [
-        r#"        __                         __         ____                       "#, // This same block of code appear a good amount of times, but Creating a fn just to print it would be confusing
+        r#"        __                         __         ____                       "#, 
         r#"       / /___  ____ _____     ____/ /___ _   / __/___  ______________ _  "#,
         r#"  __  / / __ \/ __ `/ __ \   / __  / __ `/  / /_/ __ \/ ___/ ___/ __ `/  "#,
         r#" / /_/ / /_/ / /_/ / /_/ /  / /_/ / /_/ /  / __/ /_/ / /  / /__/ /_/ /   "#,
